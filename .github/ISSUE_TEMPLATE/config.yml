@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: SmartGovIOT project context
+    url: https://github.com/KNH-INVEST-s-r-o
+    about: Use Notion for project, product, business, process, and decision context. Use GitHub Issues for concrete technical implementation work.
