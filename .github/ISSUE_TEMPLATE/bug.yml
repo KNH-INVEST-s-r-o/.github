@@ -1,0 +1,65 @@
+name: Bug report
+description: Report a reproducible technical defect.
+title: "[AREA-NNN] "
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use a stable SmartGovIOT project ID in the title when one exists, for example `[NODE-015] Fix uplink normalization`.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the defect clearly.
+      placeholder: What is broken?
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What should happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reliable reproduction you can.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Repository version, service, runtime, device, gateway, or deployment environment when relevant.
+      placeholder: production / staging / Node-RED version / device model
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs, payloads, screenshots or other evidence
+      description: Remove secrets and customer-sensitive data before attaching anything.
+
+  - type: input
+    id: notion
+    attributes:
+      label: Related Notion item
+      description: Add the relevant Notion link or stable project ID when available.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Security check
+      options:
+        - label: I have removed secrets, credentials, private keys, tokens, passwords, and sensitive customer data.
+          required: true

@@ -1,0 +1,56 @@
+name: Technical task
+description: Define a concrete engineering or operations task.
+title: "[AREA-NNN] "
+labels: ["type:task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use one stable project ID per technical result, for example `[INFRA-004] Deploy MQTT broker`.
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What technical result must exist when this task is complete?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is included and explicitly excluded?
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      description: List objective completion criteria.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies or blockers
+      description: List related issues, external decisions, infrastructure, vendors, or people this task depends on.
+
+  - type: input
+    id: notion
+    attributes:
+      label: Related Notion item
+      description: Add the relevant Notion link or stable project ID when available.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Security check
+      options:
+        - label: No secrets, credentials, private keys, tokens, passwords, or sensitive customer data are included.
+          required: true

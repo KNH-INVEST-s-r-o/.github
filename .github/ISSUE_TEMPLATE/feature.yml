@@ -1,0 +1,56 @@
+name: Feature request
+description: Propose a new technical capability or implementation.
+title: "[AREA-NNN] "
+labels: ["type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use a stable SmartGovIOT project ID in the title when one exists, for example `[ENERGY-012] Add manual meter readings`.
+
+  - type: textarea
+    id: need
+    attributes:
+      label: Problem or need
+      description: What problem are we solving and for whom?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed behaviour
+      description: Describe the expected technical or user-visible outcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Define objective conditions for completion.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and constraints
+      description: Include relevant dependencies, exclusions, compatibility requirements, or operational constraints.
+
+  - type: input
+    id: notion
+    attributes:
+      label: Related Notion item
+      description: Add the relevant Notion link or stable project ID when available.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Security check
+      options:
+        - label: No secrets, credentials, private keys, tokens, passwords, or sensitive customer data are included.
+          required: true
