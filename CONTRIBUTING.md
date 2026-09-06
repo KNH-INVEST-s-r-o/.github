@@ -87,6 +87,62 @@ Issue titles should normally use:
 
 Do not recycle stable IDs.
 
+## Repository bootstrap standard
+
+New `smartgoviot-*` repositories should start from a small, real baseline rather than an empty architectural skeleton.
+
+Create these files when applicable:
+
+```text
+README.md
+CHANGELOG.md
+.gitignore
+.editorconfig
+.env.example
+.github/CODEOWNERS
+.github/workflows/validate.yml
+.github/workflows/sync-labels.yml
+docs/adr/README.md
+docs/adr/template.md
+```
+
+Rules:
+
+- create `.env.example` only when the repository actually uses environment variables;
+- create `scripts/`, `tests/`, service directories, or other structure only when real content exists;
+- do not create empty directories merely for visual consistency;
+- keep repository-specific runtime data, credentials, generated secrets, and customer-sensitive data out of Git;
+- repository validation should follow the organization CI baseline and use only approved/pinned Actions;
+- `CODEOWNERS` should identify the current technical owner and later move to organization teams when team membership is established.
+
+Every new SmartGovIOT technical repository should adopt the centralized label standard through a small caller workflow. The caller must pin the reusable workflow to a full commit SHA and grant only the permissions it needs.
+
+Current caller pattern:
+
+```yaml
+name: Sync labels
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/sync-labels.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    uses: KNH-INVEST-s-r-o/.github/.github/workflows/sync-smartgoviot-labels.yml@3dd10ec53ea63e0725a4d1f7cbec442e91ec5846
+    with:
+      prune_default_labels: true
+```
+
+When the centralized workflow changes, update caller repositories deliberately through a normal Issue → branch → PR change and pin the new full commit SHA. Do not use a floating branch or tag reference for the reusable workflow.
+
 ## Architecture decisions
 
 Decisions with meaningful alternatives or long-term technical consequences should be recorded as ADRs in the owning repository. The ADR records the implementation-level decision and consequences; higher-level project context may remain in the project knowledge system.
