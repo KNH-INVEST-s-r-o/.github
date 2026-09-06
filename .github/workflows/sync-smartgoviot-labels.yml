@@ -1,0 +1,99 @@
+name: Sync SmartGovIOT labels
+
+on:
+  workflow_call:
+    inputs:
+      prune_default_labels:
+        description: Remove known unused GitHub default labels after syncing the SmartGovIOT standard
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync:
+    name: sync-labels
+    runs-on: ubuntu-latest
+    steps:
+      - name: Synchronize SmartGovIOT labels
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PRUNE_DEFAULT_LABELS: ${{ inputs.prune_default_labels }}
+        run: |
+          set -euo pipefail
+
+          urlencode() {
+            python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$1"
+          }
+
+          upsert_label() {
+            local name="$1"
+            local color="$2"
+            local description="$3"
+            local encoded
+            encoded="$(urlencode "$name")"
+
+            if gh api "repos/${GH_REPO}/labels/${encoded}" >/dev/null 2>&1; then
+              gh api --method PATCH "repos/${GH_REPO}/labels/${encoded}" \
+                -f new_name="$name" \
+                -f color="$color" \
+                -f description="$description" >/dev/null
+            else
+              gh api --method POST "repos/${GH_REPO}/labels" \
+                -f name="$name" \
+                -f color="$color" \
+                -f description="$description" >/dev/null
+            fi
+          }
+
+          while IFS='|' read -r name color description; do
+            upsert_label "$name" "$color" "$description"
+          done <<'LABELS'
+          type:bug|D73A4A|Something isn't working
+          type:feature|1D76DB|New capability or behavior
+          type:task|5319E7|Technical implementation task
+          type:docs|0075CA|Documentation only
+          type:refactor|A2EEEF|Internal code or configuration restructuring
+          priority:critical|B60205|Immediate or production/security blocking
+          priority:high|D93F0B|High impact or near-term priority
+          priority:normal|FBCA04|Standard priority
+          priority:low|C2E0C6|Can wait
+          status:blocked|B60205|Cannot progress due to a blocker or dependency
+          status:needs-review|0E8A16|Ready for review
+          area:energy|FBCA04|Energy module
+          area:facility|0E8A16|Facility module
+          area:lorawan|006B75|LoRaWAN
+          area:nodered|C9510C|Node-RED
+          area:infra|0052CC|Infrastructure
+          area:iot|5319E7|IoT devices and edge integration
+          area:ai|7057FF|AI and agent functionality
+          security|B60205|Security-related change or issue
+          breaking-change|000000|Backward-incompatible change
+          LABELS
+
+          if [[ "$PRUNE_DEFAULT_LABELS" == "true" ]]; then
+            defaults=(
+              accessibility
+              bug
+              documentation
+              duplicate
+              enhancement
+              "good first issue"
+              "help wanted"
+              invalid
+              question
+              wontfix
+            )
+
+            for name in "${defaults[@]}"; do
+              encoded="$(urlencode "$name")"
+              gh api --method DELETE "repos/${GH_REPO}/labels/${encoded}" >/dev/null 2>&1 || true
+            done
+          fi
+
+          echo "SmartGovIOT label synchronization completed for ${GH_REPO}."
